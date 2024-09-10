@@ -1,10 +1,6 @@
 <?php
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DestinationController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\TourController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,21 +13,28 @@ use App\Http\Controllers\TourController;
 */
 
 // Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/destinations', [DestinationController::class, 'index']);
-Route::get('/destinations/{id}', [DestinationController::class, 'show']);
-Route::post('/destinations', [DestinationController::class, 'store']);
-Route::put('/destinations/{id}', [DestinationController::class, 'update']);
-Route::delete('/destinations/{id}', [DestinationController::class, 'destroy']);
-Route::apiResource('tours', TourController::class);
+Route::group(['prefix' => config('app.version')], function () {
+    // Auth routes
+    Route::prefix('auth')->group(base_path('routes/modules/auth.php'));
+    
+    // Destinations routes
+    Route::prefix('destinations')->group(base_path('routes/modules/destinations.php'));
 
+    // Tours routes
+    Route::prefix('tours')->group(base_path('routes/modules/tours.php'));
+
+    // Bookings routes
+    Route::prefix('bookings')->group(base_path('routes/modules/bookings.php'));
+    Route::prefix('tours-destination')->group(base_path('routes/modules/tours-destination.php'));
+
+
+});
 
 // Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
-  
-    Route::get('/users/count', [UserController::class, 'countUsers']);
-    Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
+    Route::prefix('users')->group(base_path('routes/modules/users.php'));
+    
+    // Fetch authenticated user
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Destination;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DestinationController extends Controller
 {
@@ -20,11 +20,14 @@ class DestinationController extends Controller
     {
         $destination = Destination::find($id);
 
-        if ($destination) {
-            return response()->json($destination);
-        } else {
+        // Log or dd() to debug
+        Log::info('Fetching destination with ID: ' . $id);
+        if (!$destination) {
+            Log::error('Destination with ID ' . $id . ' not found.');
             return response()->json(['message' => 'Destination not found'], 404);
         }
+
+        return response()->json($destination);
     }
 
     // Create a new destination
@@ -84,4 +87,13 @@ class DestinationController extends Controller
             return response()->json(['message' => 'Destination not found'], 404);
         }
     }
+
+
+   public function getTotalDestinations()
+{
+    $totalDestinations = Destination::count();
+    return response()->json(['totalDestinations' => $totalDestinations]);
+}
+    
+    
 }

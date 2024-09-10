@@ -60,6 +60,12 @@ return [
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
     'asset_url' => env('ASSET_URL'),
+    
+
+    
+    
+        'version' => env('API_VERSION', 'v1'), 
+        'api_url' => env('API_URL', env('APP_URL') . '/api/v1'), 
 
     /*
     |--------------------------------------------------------------------------
